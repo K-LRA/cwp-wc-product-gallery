@@ -17,3 +17,8 @@ Parameters:<br>
 <code>display_virtual_badge</code> - Displays a badge if a product is virtual.<br>Defaults to <code>true</code>.<br><br>
 <code>display_purchase_count</code> - Displays a badge showing how many times a product has been purchased.<br>Defaults to <code>true</code>.<br><br>
 <code>display_emojis</code> - Uses emojis in badges. When <code>false</code>, the emojis are replaced with plain text.<br>Defaults to <code>true</code>.
+
+
+## Demonstration
+https://github.com/K-LRA/cwp-wc-product-gallery/assets/38869691/7802f78e-c75f-4874-8705-9ca30e094738
+
