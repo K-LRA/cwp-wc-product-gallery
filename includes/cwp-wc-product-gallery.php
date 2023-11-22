@@ -98,24 +98,13 @@ function build_html_badge($text, $title)
      * Populate all products on the page.
      */
     foreach ($products as $product) {
-        $display_in_stock = $params['display_in_stock'];
-        $display_out_of_stock = $params['display_oos'];
-        $display_backorder = $params['display_backorder'];
-        $display_rating = $params['display_rating'];
-        $display_stock_status = $params['display_stock_status'];
-        $display_badges = $params['display_badges'];
-
         $stock_status = $product->get_stock_status();
-        $review_count = $params['display_review_count'];
-        $is_virtual = $params['display_virtual_badge'];
-        $display_purchase_count = $params['display_purchase_count'];
-        $use_emojis = $params['display_emojis'];
 
         if (!$display_in_stock) {
             if ($stock_status == 'instock')
                 continue;
         }
-        if (!$display_out_of_stock) {
+        if (!$display_oos) {
             if ($stock_status == 'outofstock')
                 continue;
         }
@@ -146,7 +135,6 @@ function build_html_badge($text, $title)
         if ($display_badges) {
 
             if ($display_stock_status) {
-                $is_virtual = $product->is_virtual();
 
                 if ($stock_status === 'outofstock')
                     echo build_html_badge("Out of stock", 'This product is out of stock.');
@@ -155,16 +143,16 @@ function build_html_badge($text, $title)
                 else if ($stock_status === 'instock') {
                     echo build_html_badge("In stock", 'This product is in stock.');
 
-                    if ($is_virtual) {
-                        if ($is_virtual)
-                            echo build_html_badge($use_emojis ? "💾" : "Virtual", 'This is a virtual product.');
+                    if ($product->is_virtual()) {
+                        if ($display_virtual)
+                            echo build_html_badge($display_emojis ? "💾" : "Virtual", 'This is a virtual product.');
                     }
                 }
             }
             if ($display_purchase_count) {
                 $total_sales = $product->get_total_sales();
                 if ($total_sales > 0) {
-                    echo build_html_badge($total_sales . ($use_emojis ? ' 🛒' : ' sales'), "This product has been purchased $total_sales " . ($total_sales == 1 ? "time" : "times") . ".");
+                    echo build_html_badge($total_sales . ($display_emojis ? ' 🛒' : ' sales'), "This product has been purchased $total_sales " . ($total_sales == 1 ? "time" : "times") . ".");
                 }
             }
             if ($display_rating) {
@@ -172,14 +160,14 @@ function build_html_badge($text, $title)
                 if ($rating > 0) {
                     $round_rating = $rating == 5 || $rating == 4 || $rating == 3 || $rating == 2 || $rating == 1;
                     $final_rating = number_format($rating, $round_rating ? 0 : 1);
-                    echo build_html_badge($final_rating . ($use_emojis ? ' ❤️' : ' stars'), "This product receives an average rating of $final_rating.");
+                    echo build_html_badge($final_rating . ($display_emojis ? ' ❤️' : ' stars'), "This product receives an average rating of $final_rating.");
                 }
             }
-            if ($review_count) {
+            if ($display_review_count) {
                 $review_count = $product->get_review_count();
 
                 if ($review_count > 0) {
-                    echo build_html_badge($review_count . ($use_emojis ? ' ✍🏻' : ' reviews'), 'This product has received ' . $review_count . ' ' . ($review_count == 1 ? 'review' : 'reviews') . '.');
+                    echo build_html_badge($review_count . ($display_emojis ? ' ✍🏻' : ' reviews'), 'This product has received ' . $review_count . ' ' . ($review_count == 1 ? 'review' : 'reviews') . '.');
                 }
             }
         }
@@ -282,7 +270,7 @@ function build_html_badge($text, $title)
 <style>
     :root {
         <?php
-        $ws_wc_accent_colour = $params['accent_color_hex'];
+        $ws_wc_accent_colour = $accent_color_hex;
 
         echo "--ws_wc-accent-colour: $ws_wc_accent_colour;";
         echo "--ws_wc-accent-colour-heavy: " . $ws_wc_accent_colour . "90;";
@@ -445,14 +433,12 @@ function build_html_badge($text, $title)
         width: 100%;
         display: flex;
         justify-content: flex-end;
-        /* color: white; */
 
         & input {
             padding: 0.5rem 1rem;
             margin-bottom: 1rem;
             border: 1px solid var(--ws_wc-accent-colour-secondary);
             background-color: var(--ws_wc-accent-colour-primary);
-            /* color: white; */
             width: 100%;
         }
 
@@ -461,7 +447,6 @@ function build_html_badge($text, $title)
         }
 
         & input:focus {
-            /* color: white; */
             color: var(--ws_wc_accent-font-colour);
             border: 1px solid var(--ws_wc-accent-colour);
             background-color: var(--ws_wc-accent-colour-heavy);
